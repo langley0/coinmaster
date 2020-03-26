@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 
 import "./main.css";
 import Game from "./game";
+/*
 
 import bg  from "./reel_strip.png";
 import ov  from "./reel_overlay.png";
@@ -173,6 +174,6 @@ class SlotEffect extends React.Component {
         </div>);
     }
 }
-
+*/
 
 ReactDOM.render(<Game/ >, document.getElementById("root"));

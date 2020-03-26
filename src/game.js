@@ -2,6 +2,8 @@ import React from "react";
 import styled from "styled-components";
 
 import Menu from "./menu";
+import Village from "./village";
+import SlotMachine from "./slotmachine";
 
 const GameView = styled.div`
     position: relative;
@@ -15,18 +17,41 @@ const GameView = styled.div`
 
 const GameCanvas = styled.div`
     position: relative;
-    width: 200%;
-    height: 200%;
-    top: -100%;
+    width: 50%;
+    height: 400%;
+    top: ${props=> props.mode === "village" ? "-300%" : "0px"};
+    transition: top 1s ease-in-out;
 `;
 
 export default class Game extends React.Component {
-    render() {
-        return (<GameView>
-            <GameCanvas>
+    constructor(props) {
+        super(props);
 
-            </GameCanvas>
-            <Menu />
+        this.slot = this.slot.bind(this);
+        this.village = this.village.bind(this);
+
+        this.state = {
+            mode: "village"
+        };
+    }
+
+    slot() {
+        this.setState({mode: "slot" });
+    }
+
+    village() {
+        this.setState({mode: "village" });
+    }
+
+    render() {
+        const { mode } = this.state;
+        return (<GameView>
+            <Menu>
+                <GameCanvas mode={mode}>
+                    <Village onChange={this.slot}/>
+                    <SlotMachine onChange={this.village}/>
+                </GameCanvas>
+            </Menu>
         </GameView>);
     }
 }
