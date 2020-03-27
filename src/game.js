@@ -5,6 +5,10 @@ import Menu from "./menu";
 import Village from "./village";
 import SlotMachine from "./slotmachine";
 
+import GameStore from "./core/gamestore";
+import { Provider } from "mobx-react";
+const store = new GameStore();
+
 const GameView = styled.div`
     position: relative;
     width: 100%;
@@ -45,13 +49,16 @@ export default class Game extends React.Component {
 
     render() {
         const { mode } = this.state;
-        return (<GameView>
-            <Menu>
-                <GameCanvas mode={mode}>
-                    <Village onChange={this.slot}/>
-                    <SlotMachine onChange={this.village}/>
-                </GameCanvas>
-            </Menu>
-        </GameView>);
+        return (
+        <Provider >
+            <GameView>
+                <Menu>
+                    <GameCanvas mode={mode}>
+                        <Village onChange={this.slot}/>
+                        <SlotMachine onChange={this.village}/>
+                    </GameCanvas>
+                </Menu>
+            </GameView>
+        </Provider>);
     }
 }
