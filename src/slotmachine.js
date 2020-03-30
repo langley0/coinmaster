@@ -1,5 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import { inject, observer } from "mobx-react";
+
+import Button from "./button";
 
 const SlotStyle = styled.div`
     position: absolute;
@@ -33,20 +36,6 @@ const SlotMachineContainer = styled.div`
     border-radius: 4px;
     overflow: hidden;
 `
-const SpinButton = styled.div`
-    margin: auto;
-    margin-top: 10px;
-
-    font-size: 32px;
-    width: 70%;
-    height: 50px;
-    line-height: 50px;
-    vertical-align:middle;
-    text-align:center;
-    border: 2px #ddd solid;
-    border-radius: 4px;
-    overflow: hidden;
-`
 const ReelStyle = styled.div`
     position: absolute;
     width:30%;
@@ -56,12 +45,14 @@ const ReelStyle = styled.div`
 `
 
 const ReelItem = styled.div`
-    text-align:center;
     position: relative;
-    font-size: 5rem;
+    font-size: 4rem;
     height: 90px;
-    vertical-align:middle;
-    line-height: 90px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
 `
 
 const SlotBase = styled.div`
@@ -72,28 +63,69 @@ const SlotBase = styled.div`
     height: 35%;
 `
 
+
+const SpinCounter = styled.div`
+    position: relative;
+    margin: auto;
+    margin-top: 2px;
+    width: 80%;
+    height: 30px;
+
+    border: 2px #ddd solid;
+    border-radius: 10px;
+    overflow: hidden;
+`
+
+const SpinCounterBar = styled.div`
+    position: absolute;
+    width: ${props=> Math.min(props.ratio * 100, 100)}%;
+    height: 100%;
+    background-color: #777;
+`
+const SpinNumber = styled.div`
+    position: absolute;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+`
+
+
+
+const SpinButton = styled(Button)`
+    margin: auto;
+    margin-top: 30px;
+
+    font-size: 32px;
+    width: 70%;
+    height: 50px;
+`
+
 class Reel extends React.Component {
     render () {
         const { index, top } = this.props;
         return <ReelStyle index={index} top={top}>
-            <ReelItem>1</ReelItem>
-            <ReelItem>2</ReelItem>
-            <ReelItem>3</ReelItem>
-            <ReelItem>4</ReelItem>
-            <ReelItem>5</ReelItem>
-            <ReelItem>6</ReelItem>
-            <ReelItem>1</ReelItem>
-            <ReelItem>2</ReelItem>
-            <ReelItem>3</ReelItem>
-            <ReelItem>4</ReelItem>
-            <ReelItem>5</ReelItem>
-            <ReelItem>6</ReelItem>
-            <ReelItem>1</ReelItem>
-            <ReelItem>2</ReelItem>
-            <ReelItem>3</ReelItem>
-            <ReelItem>4</ReelItem>
-            <ReelItem>5</ReelItem>
-            <ReelItem>6</ReelItem>
+            <ReelItem><span role="img" aria-label="Battery">🔋</span></ReelItem>
+            <ReelItem><span role="img" aria-label="_">$</span></ReelItem>
+            <ReelItem><span role="img" aria-label="Heavy Dollar Sign">💲</span></ReelItem>
+            <ReelItem><span role="img" aria-label="Crossed Swords">⚔️</span></ReelItem>
+            <ReelItem><span role="img" aria-label="Shield">🛡️</span></ReelItem>
+            <ReelItem><span role="img" aria-label="Pig Face">🐷</span></ReelItem>
+            <ReelItem><span role="img" aria-label="Battery">🔋</span></ReelItem>
+            <ReelItem><span role="img" aria-label="_">$</span></ReelItem>
+            <ReelItem><span role="img" aria-label="Heavy Dollar Sign">💲</span></ReelItem>
+            <ReelItem><span role="img" aria-label="Crossed Swords">⚔️</span></ReelItem>
+            <ReelItem><span role="img" aria-label="Shield">🛡️</span></ReelItem>
+            <ReelItem><span role="img" aria-label="Pig Face">🐷</span></ReelItem>
+            <ReelItem><span role="img" aria-label="Battery">🔋</span></ReelItem>
+            <ReelItem><span role="img" aria-label="_">$</span></ReelItem>
+            <ReelItem><span role="img" aria-label="Heavy Dollar Sign">💲</span></ReelItem>
+            <ReelItem><span role="img" aria-label="Crossed Swords">⚔️</span></ReelItem>
+            <ReelItem><span role="img" aria-label="Shield">🛡️</span></ReelItem>
+            <ReelItem><span role="img" aria-label="Pig Face">🐷</span></ReelItem>
+            
         </ReelStyle>
     }
 }
@@ -135,7 +167,6 @@ class Slot extends React.Component {
 
     spin() {
         const slotMachine = Slot.slotMachine;
-
         this.setState(prev => {
             if(!prev.spinning) {
                 const timer1 = this.startReelSpin(0, 0);
@@ -164,7 +195,10 @@ class Slot extends React.Component {
                     }, timeAfter);
 
                 }, slotMachine.firstReelStopTime);
-
+                
+                // 스핀 요청을 한다
+                // TODO : 결과를 얻어오고 그 결과에 맞추어서 룰렛을 멈출수 있어야 한다
+                this.props.player.spinReel();
 
                 return { spinning : true };
             } else {
@@ -220,7 +254,8 @@ class Slot extends React.Component {
 
     render() {
         const { reels, spinning } = this.state;
-        //const reelStyle = {width: 121, height: 2160, position:"absolute", background: `url(${bg}) 0 0 repeat-y`};
+        const { player } = this.props;
+        
         return (
         <SlotBase>
             <SlotMachineContainer>
@@ -230,10 +265,16 @@ class Slot extends React.Component {
                     })
                 }
             </SlotMachineContainer>
+            <SpinCounter>
+                <SpinCounterBar ratio={player.spin/player.spinMax} />
+            <SpinNumber>{ `${player.spin}/${player.spinMax}`}</SpinNumber>
+            </SpinCounter>
             <SpinButton disabled={spinning} onClick={this.spin.bind(this)}>SPIN</SpinButton>
         </SlotBase>);
     }
 }
+
+Slot = inject("player")(observer(Slot));
 
 export default class SlotMachine extends React.Component {
     constructor(props)  {

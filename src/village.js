@@ -1,5 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import { inject, observer } from "mobx-react";
+
+import Button from "./button";
 
 const Village = styled.div`
     position: absolute;
@@ -10,26 +13,37 @@ const Village = styled.div`
 
 `
 
-const GoSlotButton = styled.div`
-    position: absolute;
+const PlayerName = styled.div`
+    position: replative;
     border: 2px #ddd solid;
-    border-radius: 4px;
-
+    border-radius: 20px;
     width: 60%;
-    top 12%;
-    left: 20%;
+    margin: auto;
+    margin-top: 20%;
+    
     vertical-align: middle;
     font-size: 20px;
     line-height: 40px;
     text-align: center;
+`
 
+const GoSlotButton = styled(Button)`
+    position: replative;
+
+    width: 60%;
+    margin: auto;
+    margin-top: 3%;
+
+    height: 40px;
+    font-size: 20px;
 `
 
 const BuildingContainer = styled.div`
-    position: absolute;
+    position: replative;
     width: 80%;
-    left: 7%;
-    top: 25%;
+    margin: auto;
+    margin-top: 15%;
+    
     padding: 3%;
 
     border: 2px #ddd solid;
@@ -44,7 +58,7 @@ const BuildingDiv = styled.div`
 `
 
 const BuilidngName = styled.span`
-     left: 0;
+    left: 0;
     font-size: 2rem;
 `
 
@@ -67,6 +81,7 @@ const BuilidngPrice = styled.div`
     font-size: 1rem;
 `
 
+
 class Building extends React.Component {
     render() {
         const { name, level, price} = this.props;
@@ -84,7 +99,7 @@ class Building extends React.Component {
     }
 }
 
-export default class VillageComponent extends React.Component {
+class VillageComponent extends React.Component {
     constructor(props)  {
         super(props);
 
@@ -109,7 +124,10 @@ export default class VillageComponent extends React.Component {
 
     render() {
         const {buildings} = this.state;
-        return (<Village>
+        const { player } = this.props;
+        return (
+        <Village>
+            <PlayerName>{player.name}</PlayerName>
             <GoSlotButton onClick={this.onClick}>▲Go SlotMachine</GoSlotButton>
             <BuildingContainer>
                 {
@@ -121,3 +139,5 @@ export default class VillageComponent extends React.Component {
         </Village>);
     }
 }
+
+export default inject("player")(observer(VillageComponent));

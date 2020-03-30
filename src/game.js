@@ -1,13 +1,13 @@
 import React from "react";
 import styled from "styled-components";
+import { inject, observer } from "mobx-react";
 
-import Menu from "./menu";
+import UI from "./ui";
 import Village from "./village";
 import SlotMachine from "./slotmachine";
 
-import GameStore from "./core/gamestore";
-import { Provider } from "mobx-react";
-const store = new GameStore();
+import Loader from "./loader";
+import LoginComponent from "./login";
 
 const GameView = styled.div`
     position: relative;
@@ -15,8 +15,9 @@ const GameView = styled.div`
     height: 100%;
     max-width: 375px;
     max-height: 812px;
-    background-color: grey;
+    background-color: #555;
     overflow: hidden;
+    user-select: none;
 `;
 
 const GameCanvas = styled.div`
@@ -27,7 +28,7 @@ const GameCanvas = styled.div`
     transition: top 1s ease-in-out;
 `;
 
-export default class Game extends React.Component {
+class Game extends React.Component {
     constructor(props) {
         super(props);
 
@@ -47,18 +48,32 @@ export default class Game extends React.Component {
         this.setState({mode: "village" });
     }
 
-    render() {
+    renderLogin()  {
+        return <LoginComponent />;
+    }
+
+    renderGame() {
         const { mode } = this.state;
         return (
-        <Provider >
-            <GameView>
-                <Menu>
-                    <GameCanvas mode={mode}>
-                        <Village onChange={this.slot}/>
-                        <SlotMachine onChange={this.village}/>
-                    </GameCanvas>
-                </Menu>
-            </GameView>
-        </Provider>);
+        <UI>
+            <GameCanvas mode={mode}>
+                <Village onChange={this.slot}/>
+                <SlotMachine onChange={this.village}/>
+            </GameCanvas>
+        </UI>);
+    }
+    
+    render() {
+        const {player} = this.props;
+        return (
+        <GameView>{
+                player.isLoaded ? this.renderGame() : this.renderLogin()
+            }
+            <Loader />
+        </GameView>
+        );
     }
 }
+
+
+export default inject("player")(observer(Game));

@@ -1,16 +1,18 @@
-import { observable } from "mobx";
+import { observable, flow, decorate } from "mobx";
 
 import gameRepository from "./gamerepository";
 import PlayerModel from "./playermodel";
 
-class GameStore {
-    @observable
+class Store {
     player = null;
-
-    async *login(username) {
+    login = flow(function* (username) {
         const player = yield gameRepository.login(username);
         this.player = new PlayerModel(player);
-    }
+    }).bind(this);
 }
 
-export default GameStore;
+decorate(Store, {
+    player: observable,
+});
+
+export default Store;

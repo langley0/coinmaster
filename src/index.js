@@ -1,7 +1,17 @@
 import React from "react";
 import ReactDOM from "react-dom";
+import { Provider } from "mobx-react";
 
-import "./main.css";
+import "./css/main.css";
 import Game from "./game";
+import Environment from "./store/env";
+import Player from "./store/player";
 
-ReactDOM.render(<Game/ >, document.getElementById("root"));
+const env = new Environment();
+const player = new Player();
+
+ReactDOM.render(
+    <Provider env={env} player={player}>
+        <Game />
+    </Provider>, 
+    document.getElementById("root"));

@@ -1,20 +1,18 @@
 import React from "react";
 import styled from "styled-components";
+import { inject, observer } from "mobx-react";
+
+import Button from "./button";
+import { format } from "./utils";
 
 
-const MenuButton = styled.div`
+const MenuButton = styled(Button)`
     position: absolute;
     width: 48px;
     height: 48px;
     top :10px;
     left: -58px;
-    border-radius: 4px;
-    border: 2px #ddd solid;
-    
-    text-align: center;
-    vertical-align: middle;
-    line-height: 40px;
-    
+
     &:before {
         font-size: 1rem;
         content: "menu";
@@ -123,7 +121,7 @@ const UIShield = styled.div`
     left: 210px;
 `
 
-export default class MenuComponent extends React.Component {
+class MenuComponent extends React.Component {
     constructor() {
         super();
 
@@ -140,7 +138,7 @@ export default class MenuComponent extends React.Component {
 
     render() {
         const { menuOpened } = this.state;
-        const { children } = this.props;
+        const { children, player } = this.props;
         return (
         <UIBase menuOpened={menuOpened}>
             {   children }
@@ -153,9 +151,11 @@ export default class MenuComponent extends React.Component {
                 </MenuContainer>
                 <MenuButton onClick={this.onClickMenu}></MenuButton>
             </Menu>
-            <UIGold >44,000G</UIGold>
+            <UIGold >{ format(player.gold) }</UIGold>
             <UIStar/>
             <UIShield/>
         </UIBase>);
     }
 }
+
+export default inject("player")(observer(MenuComponent));
