@@ -6,8 +6,10 @@ import UI from "./ui";
 import Village from "./village";
 import SlotMachine from "./slotmachine";
 
+import Login from "./login";
+import Attack from "./attack";
+import Raid from "./raid";
 import Loader from "./loader";
-import LoginComponent from "./login";
 
 const GameView = styled.div`
     position: relative;
@@ -49,7 +51,7 @@ class Game extends React.Component {
     }
 
     renderLogin()  {
-        return <LoginComponent />;
+        return <Login />;
     }
 
     renderGame() {
@@ -62,13 +64,27 @@ class Game extends React.Component {
             </GameCanvas>
         </UI>);
     }
+
+    renderContent() {
+        const {player} = this.props;
+        console.log(player);
+        if(player.mode === "login") {
+            return this.renderLogin();
+        } else if(player.mode === "game") {
+            return this.renderGame();
+        } else if(player.mode === "raid") {
+            return <Raid></Raid>
+        } else if(player.mode === "attack") {
+            return <Attack></Attack>
+        }
+        
+    }
     
     render() {
-        const {player} = this.props;
+        
         return (
-        <GameView>{
-                player.isLoaded ? this.renderGame() : this.renderLogin()
-            }
+        <GameView>
+            { this.renderContent() }
             <Loader />
         </GameView>
         );

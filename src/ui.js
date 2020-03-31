@@ -4,6 +4,7 @@ import { inject, observer } from "mobx-react";
 
 import Button from "./button";
 import { format } from "./utils";
+import AnimatedNumber from "./components/animated-number"
 
 
 const MenuButton = styled(Button)`
@@ -128,12 +129,17 @@ class MenuComponent extends React.Component {
         this.state = { menuOpened: false}
 
         this.onClickMenu = this.onClickMenu.bind(this);
+        this.format = this.format.bind(this);
     }
 
     onClickMenu() {
         this.setState(prev => {
             return { menuOpened: !prev.menuOpened };
         })
+    }
+
+    format(v) {
+        return format(Math.floor(v));
     }
 
     render() {
@@ -151,7 +157,7 @@ class MenuComponent extends React.Component {
                 </MenuContainer>
                 <MenuButton onClick={this.onClickMenu}></MenuButton>
             </Menu>
-            <UIGold >{ format(player.gold) }</UIGold>
+            <UIGold ><AnimatedNumber value={player.gold} duration={1000} format={this.format}/></UIGold>
             <UIStar/>
             <UIShield/>
         </UIBase>);

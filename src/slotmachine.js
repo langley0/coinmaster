@@ -3,6 +3,15 @@ import styled from "styled-components";
 import { inject, observer } from "mobx-react";
 
 import Button from "./button";
+import { format } from "./utils";
+
+
+const SlotBase = styled.div`
+    position: absolute;
+    left: 10%;
+    top: 30%;
+    width: 80%;
+`
 
 const SlotStyle = styled.div`
     position: absolute;
@@ -26,6 +35,23 @@ const ChangeButton = styled.div`
     line-height: 40px;
     text-align: center;
 
+`
+
+
+const SpinResult = styled.div`
+    position: relative;
+    width: 100%;
+    height: 45px;
+    margin-bottom: 2px;
+
+    border: 2px #ddd solid;
+    border-radius: 4px;
+    
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 28px;
 `
 
 const SlotMachineContainer = styled.div`
@@ -54,16 +80,6 @@ const ReelItem = styled.div`
     justify-content: center;
 
 `
-
-const SlotBase = styled.div`
-    position: absolute;
-    left: 10%;
-    top: 40%;
-    width: 80%;
-    height: 35%;
-`
-
-
 const SpinCounter = styled.div`
     position: relative;
     margin: auto;
@@ -91,8 +107,6 @@ const SpinNumber = styled.div`
     align-items: center;
     justify-content: center;
 `
-
-
 
 const SpinButton = styled(Button)`
     margin: auto;
@@ -141,7 +155,7 @@ class Slot extends React.Component {
         firstReelStopTime: 667,
         secondReelStopTime: 575,
         thirdReelStopTime: 568,
-        payoutStopTime: 700,
+        payoutStopTime: 100,
         reelSpeedDifference: 0,
         reelSpeed1Delta: 100,
         reelSpeed1Time: 0,
@@ -157,12 +171,19 @@ class Slot extends React.Component {
         
         this.state = {
             reels: [{ top: 0, left: 10 }, { top: 0, left: 158, }, { top: 0, left: 304, }],
-            spinning: false
+            spinning: false,
+            resultText: null,
         }
     }
     
     componentWillUnmount() {
         clearInterval(this.timer);
+    }
+
+    setReward(reward) {
+        if (reward.gold) {
+            this.setState({ resultText: format(reward.gold) });
+        }
     }
 
     spin() {
@@ -176,31 +197,52 @@ class Slot extends React.Component {
                 this.timers = [timer1, timer2, timer3];
                 
                 
-                setTimeout(() => {
+                const stopFunc = (result) => {
                     let timeAfter = 0;
+                    const { reels, reward }  = result;
                     setTimeout(() =>{
-                        this.stopReelSpin(0);
+                        this.stopReelSpin(0, reels[0]);
                     }, timeAfter);
                     timeAfter += slotMachine.secondReelStopTime;
                     window.setTimeout(() => {
-                        this.stopReelSpin(1);
+                        this.stopReelSpin(1, reels[1]);
                     }, timeAfter);
                     timeAfter += slotMachine.thirdReelStopTime;
                     window.setTimeout(() => {
-                        this.stopReelSpin(2);
+                        this.stopReelSpin(2, reels[2]);
                     }, timeAfter);
+                    
                     timeAfter += slotMachine.payoutStopTime;
                     window.setTimeout(() => {
-                        this.endSpin();
+                        this.setReward(reward);
+                        this.props.player.sync().then(() => {
+                            this.endSpin();
+                        });
                     }, timeAfter);
+                };
 
+                let expired = false, resultReels = null;
+
+                // 서버로부터의 결과가 빨리 와도 일정시간이 되기전에는 멈추지 않는다
+                window.setTimeout(function() {
+                    expired = true;
+                    if (resultReels) {
+                        stopFunc(resultReels);
+                    }
                 }, slotMachine.firstReelStopTime);
                 
                 // 스핀 요청을 한다
                 // TODO : 결과를 얻어오고 그 결과에 맞추어서 룰렛을 멈출수 있어야 한다
-                this.props.player.spinReel();
+                this.props.player.spinReel().then(result => {
+                    resultReels = result;
+                    if (expired) {
+                        stopFunc(resultReels);
+                    }
+                });
 
-                return { spinning : true };
+
+
+                return { spinning : true, resultText: null };
             } else {
                 return null;
             }
@@ -229,7 +271,7 @@ class Slot extends React.Component {
         return timer;
     }
 
-    stopReelSpin(index) {
+    stopReelSpin(index, target) {
         const slotMachine = Slot.slotMachine;
 
         if (this.timers) {
@@ -238,7 +280,6 @@ class Slot extends React.Component {
 
         const reels = this.state.reels;
         const reel = { left: reels[index].left } ;
-        const target = Math.floor(Math.random() * numIconsPerReel);
 
         const e = slotMachine.stripHeight / numIconsPerReel;
         const top = -slotMachine.stripHeight - (target - 1) * e + slotMachine.alignmentOffset;
@@ -253,11 +294,12 @@ class Slot extends React.Component {
     }
 
     render() {
-        const { reels, spinning } = this.state;
+        const { reels, spinning, resultText } = this.state;
         const { player } = this.props;
         
         return (
         <SlotBase>
+            <SpinResult>{resultText}</SpinResult>
             <SlotMachineContainer>
                 {
                     reels.map((reel, index) => {
