@@ -3,96 +3,130 @@ import styled from "styled-components";
 import { inject, observer } from "mobx-react";
 
 import Button from "./button";
+import Intro from "./intro";
+import STAGE from "./data/stage";
 
+import { format } from "./utils";
+
+const BUILDING_NAMES = ["HOUSE", "STATUE", "FIELD", "FARM", "BOAT"];
+    
 const Village = styled.div`
     position: absolute;
     width: 100%;
     height: 25%;
-    left: 0px;
     top: 75%;
 
 `
 
 const PlayerName = styled.div`
-    position: replative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
     border: 2px #ddd solid;
     border-radius: 20px;
     width: 60%;
     margin: auto;
     margin-top: 20%;
+
+    font-size: 1.5rem;
     
-    vertical-align: middle;
-    font-size: 20px;
-    line-height: 40px;
-    text-align: center;
 `
 
 const GoSlotButton = styled(Button)`
-    position: replative;
-
     width: 60%;
     margin: auto;
     margin-top: 3%;
 
-    height: 40px;
-    font-size: 20px;
+    height: 5%;
+    font-size: 1.2rem;
 `
 
 const BuildingContainer = styled.div`
-    position: replative;
     width: 80%;
+    height: 55%;
     margin: auto;
     margin-top: 15%;
     
     padding: 3%;
-
-    border: 2px #ddd solid;
-    border-radius: 4px;
 `
 
 const BuildingDiv = styled.div`
     position: relative;
     width: 100%;
-    margin-top: 2%;
-    margin-bottom: 2%;
-`
+    height: 20%;
+    margin: 2px;
 
-const BuilidngName = styled.span`
-    left: 0;
-    font-size: 2rem;
-`
-
-const BuilidngUp = styled.div`
-    position: absolute;
-    right: 0;
-    top: 50%;
-    width: 20%;
-    height: 50%;
-    text-align:center;
-    border: 1px #ddd solid;
+    border: 2px #ddd solid;
     border-radius: 4px;
 `
 
-const BuilidngPrice = styled.div`
-    position: absolute;
-    top: 0;
-    width: 100%;
-    text-align: right;
-    font-size: 1rem;
+const BuildingName = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    float: left;
+    width: 70%;
+    height: 60%;
+    font-size: 2rem;
+    
 `
 
+const BuildingProgess = styled.div`
+    float: left;
+    width: 70%;
+    height: 40%;
+    font-size: 1.2rem;
+    text-align: center;
+`
+
+const BuilidngPrice = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: absolute;
+    width: 30%;
+    height: 30%;
+    right: 0;
+    top: 0;
+    
+    font-size: 1 rem;
+`
+
+const BuilidngUp = styled(Button)`
+    position: absolute;
+    right: 2%;
+    top: 40%;
+    width: 25%;
+    height: 35%;
+
+`
 
 class Building extends React.Component {
-    render() {
-        const { name, level, price} = this.props;
+    getProgress(level) {
+        if (level === 0) {
+            return "○-○-○-○";
+        } else if (level === 1) {
+            return "●-○-○-○";
+        } else if (level === 2) {
+            return "●─●─○─○";
+        } else if (level === 3) {
+            return "●─●─●─○";
+        } else {
+            return "●─●─●─●";
+        }
+    }
 
-        return (<BuildingDiv>
-            <BuilidngPrice>{ price }</BuilidngPrice>
-            <BuilidngUp >BUY</BuilidngUp>
-            <BuilidngName>{ name }</BuilidngName>
-            <span> (LEVEL { level })</span>
-            
-            
+    render() {
+        const { name, level, price,onClick} = this.props;
+        return (
+        <BuildingDiv>
+            <BuildingName>{ name }</BuildingName>
+            <BuildingProgess>{ this.getProgress(level) }</BuildingProgess>
+            <BuilidngPrice>{format(price)}</BuilidngPrice>
+            <BuilidngUp onClick={onClick}>BUY</BuilidngUp>
         </BuildingDiv>
 
         );
@@ -104,15 +138,7 @@ class VillageComponent extends React.Component {
         super(props);
 
         this.onClick = this.onClick.bind(this);
-        this.state = {
-            buildings: [
-                { name: "HOUSE", level: 1, price: 10000 },
-                { name: "STATUE", level: 1, price: 10000 },
-                { name: "FIELD", level: 1, price: 10000 },
-                { name: "FARM", level: 1, price: 10000 },
-                { name: "BOAT", level: 1, price: 10000 },
-            ]
-        }
+        this.onCloseIntro = this.onCloseIntro.bind(this);
     }
 
     onClick() {
@@ -122,20 +148,39 @@ class VillageComponent extends React.Component {
         }
     }
 
-    render() {
-        const {buildings} = this.state;
+    onCloseIntro() {
+        // intro 를 끝내고 서버에 태깅을 한다
         const { player } = this.props;
+        player.intro();
+    }
+
+    build(buildingIndex) {
+        const { player } = this.props;
+        player.build(buildingIndex);
+    }
+
+    render() {
+        const { player } = this.props;
+        const currentStage = STAGE[player.stage];
+
         return (
         <Village>
             <PlayerName>{player.name}</PlayerName>
             <GoSlotButton onClick={this.onClick}>▲Go SlotMachine</GoSlotButton>
             <BuildingContainer>
                 {
-                    buildings.map((item, index) => {
-                        return <Building name={item.name} level={item.level} price={item.price}/>
+                    currentStage.map((prices, index) => {
+                        const level = player.buildings[index];
+                        const name = BUILDING_NAMES[index];
+                        const price = prices[level];
+                        return <Building key={"building-" + index} name={name} level={level} price={price} onClick={()=> this.build(index)} />
                     })
                 }
             </BuildingContainer>
+            { player.justCreated 
+                ? <Intro onClose={this.onCloseIntro}/> 
+                : null
+            }
         </Village>);
     }
 }

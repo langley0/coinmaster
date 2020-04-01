@@ -66,16 +66,36 @@ class Game extends React.Component {
     }
 
     renderContent() {
-        const {player} = this.props;
-        console.log(player);
-        if(player.mode === "login") {
+        const {env, player} = this.props;
+        if(env.mode === "login") {
             return this.renderLogin();
-        } else if(player.mode === "game") {
+        } else if(env.mode === "game") {
             return this.renderGame();
-        } else if(player.mode === "raid") {
+        } else if(env.mode === "raid") {
             return <Raid></Raid>
-        } else if(player.mode === "attack") {
+        } else if(env.mode === "attack") {
             return <Attack></Attack>
+        } else {
+            // 처음 실행이다
+            // 나중에 로그인을 관리하는 부분을 따로 분리하여야 한다. 일단은 여기서 작성
+            // 로그인 가능한 상태인지 파악한다
+            // auth 매니져가 따로 있어야 한다
+            const username = localStorage.getItem("username");
+            if (username) {
+                // 바로 계정을 읽어와서 게임을 시도한다
+                env.showLoader();
+                player.load(username).then(() => {
+                    env.toHome();
+                    env.hideLoader();
+                });
+                return null;
+            } else {
+                // 로그인시도
+                Promise.resolve().then(()=> {
+                    env.toLogin();
+                });
+                return null;
+            }
         }
         
     }
@@ -92,4 +112,4 @@ class Game extends React.Component {
 }
 
 
-export default inject("player")(observer(Game));
+export default inject("player", "env")(observer(Game));

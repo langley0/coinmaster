@@ -2,11 +2,13 @@ import { observable, flow, decorate } from "mobx";
 import respository from "../core/gamerepository";
 
 class Player {
-    mode = "login";
     name = null;
     gold = 0;
+    star = 0;
     spin = 5;
     spinMax = 50;
+    stage = 1;
+    justCreated = false;
 
     // 업데이트를 딜레이 시켜서 원하는 시점에 업데이트를 한다
     pendingUpdates = [];
@@ -14,10 +16,7 @@ class Player {
     load = flow(function *(username) {
         const player = yield respository.login(username);
         // 여기에 알아서 저장...
-        this.mode = "game";
-        this.name = username;
-        this.gold = player.gold;
-        this.spin = player.spin;
+        Object.assign(this, player);
     }).bind(this);
 
     spinReel = flow(function *() {
@@ -35,11 +34,29 @@ class Player {
         this.gold = player.gold;
         this.spin = player.spin;
     }).bind(this);
+
+    intro = flow(function *() {
+        yield respository.intro();
+        this.justCreated = false;
+    }).bind(this);
+
+    build = flow(function *(building) {
+        const result = yield respository.build(building);
+        // 결과를 적용한다
+        if (result) {
+            Object.assign(this, result);
+        } else {
+            // 실패, 알람을 띄워야 한다
+        }
+    }).bind(this);
 }
 
 decorate(Player, {
-    mode: observable,
+    justCreated: observable,
+    stage: observable,
+    buildings: observable,
     gold: observable,
+    star: observable,
     spin: observable,
 });
 

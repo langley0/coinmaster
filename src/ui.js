@@ -98,6 +98,7 @@ const UIStar = styled.div`
     position: absolute;
     font-size: 20px;
     width: 40px;
+    height: 40px;
     font-size: 32px;
 
     &:before {
@@ -106,6 +107,16 @@ const UIStar = styled.div`
 
     top: 4px;
     left: 174px;
+`
+
+const UIStarCount = styled.div`
+    position: absolute;
+    height: 50%;
+    width: 50%;
+    top: 75%;
+    right: -10%;
+
+    font-size: 1rem;
 `
 
 const UIShield = styled.div`
@@ -145,6 +156,7 @@ class MenuComponent extends React.Component {
     render() {
         const { menuOpened } = this.state;
         const { children, player } = this.props;
+        console.log(player.star);
         return (
         <UIBase menuOpened={menuOpened}>
             {   children }
@@ -157,8 +169,11 @@ class MenuComponent extends React.Component {
                 </MenuContainer>
                 <MenuButton onClick={this.onClickMenu}></MenuButton>
             </Menu>
-            <UIGold ><AnimatedNumber value={player.gold} duration={1000} format={this.format}/></UIGold>
-            <UIStar/>
+            <UIGold ><AnimatedNumber value={player.gold} duration={500} format={this.format}/></UIGold>
+            <UIStar>
+                <UIStarCount>{player.star}</UIStarCount>
+            </UIStar>
+            
             <UIShield/>
         </UIBase>);
     }

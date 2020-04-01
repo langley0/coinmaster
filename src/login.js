@@ -40,6 +40,9 @@ class LoginComponent extends React.Component {
         if (playerName) {
             env.showLoader();
             player.load(playerName).then(() => {
+                localStorage.setItem("username", playerName);
+                
+                env.toHome();
                 env.hideLoader();
             });
         }

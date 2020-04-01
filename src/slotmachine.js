@@ -9,7 +9,7 @@ import { format } from "./utils";
 const SlotBase = styled.div`
     position: absolute;
     left: 10%;
-    top: 30%;
+    bottom: 20%;
     width: 80%;
 `
 
@@ -83,7 +83,7 @@ const ReelItem = styled.div`
 const SpinCounter = styled.div`
     position: relative;
     margin: auto;
-    margin-top: 2px;
+    margin-top: 10px;
     width: 80%;
     height: 30px;
 
@@ -98,6 +98,16 @@ const SpinCounterBar = styled.div`
     height: 100%;
     background-color: #777;
 `
+
+const SpinStatus = styled.div`
+    width: 50%;
+    height: 20px;
+    margin: -2px auto;
+
+    border: 2px #ddd solid;
+    border-radius: 10px;
+`
+
 const SpinNumber = styled.div`
     position: absolute;
     width: 100%;
@@ -293,6 +303,18 @@ class Slot extends React.Component {
         this.setState({ spinning: false });
     }
 
+    getSpinStatus() {
+        const { player } = this.props;
+        player.spin = 2000;
+        if (player.spin < player.spinMax) {
+            
+        }  else if (player.spin > player.spinMax) {
+            return `+${player.spin - player.spinMax} spins`
+        } else {
+            return null;
+        }
+    }
+
     render() {
         const { reels, spinning, resultText } = this.state;
         const { player } = this.props;
@@ -309,8 +331,9 @@ class Slot extends React.Component {
             </SlotMachineContainer>
             <SpinCounter>
                 <SpinCounterBar ratio={player.spin/player.spinMax} />
-            <SpinNumber>{ `${player.spin}/${player.spinMax}`}</SpinNumber>
+                <SpinNumber>{ `${player.spin}/${player.spinMax}`}</SpinNumber>
             </SpinCounter>
+            <SpinStatus>{ this.getSpinStatus() } </SpinStatus>
             <SpinButton disabled={spinning} onClick={this.spin.bind(this)}>SPIN</SpinButton>
         </SlotBase>);
     }

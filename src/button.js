@@ -10,12 +10,12 @@ export default styled.div`
     overflow: hidden;
     cursor: pointer;
 
-    &:hover {
+    &:hover:not([disabled]) {
         background: #ddd;
         color: #555;
     }
 
-    &:active {
+    &:active:not([disabled]) {
         transform: scale(0.9);
     }
 `
