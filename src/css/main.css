@@ -9,27 +9,29 @@ html, body {
 }
 
 .flex {
-    flex: 1;
     display: flex;
 }
 
-.flex-2 {
-    flex: 2;
+.flex-h {
     display: flex;
+    flex-direction: row;
 }
 
-.flex-3 {
-    flex: 3;
+.flex-v {
     display: flex;
-}
-
-.column {
     flex-direction: column;
 }
 
+.f1 {
+    flex: 1;
+}
 
-.row {
-    flex-direction: row;
+.f2 {
+    flex: 2;
+}
+
+.f3 {
+    flex: 3;
 }
 
 .center {
@@ -52,10 +54,34 @@ html, body {
     display: flex;
 }
 
-.login .title {
+.button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+    border: 2px #ddd solid;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.button:hover {
+    background: #ddd;
+    color: #555;
+}
+
+.button:active:not(:disabled){
+    transform: scale(0.9);
+}
+
+
+.login {
     text-align: center;
     font-size:  64px;
 }
 
-.login .action {
+.login .login-btn{
+    width: 80%;
+    height : 48px;
+    font-size: 20px;
 }

@@ -16,8 +16,8 @@ class PlayerStore {
         this.state = new PlayerState();
     }
 
-    onLogin(data) {
-        console.log("logined", data);
+    fetch(data) {
+        console.log("get player data");
     }
 
     getState() {

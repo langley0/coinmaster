@@ -1,14 +1,5 @@
 import React from "react";
-import styled from "styled-components";
 import { inject, observer } from "mobx-react";
-
-import Button from "../button";
-
-const LoginButton = styled(Button)`
-    width: 80%;
-    height : 48px;
-`;
-
 
 class LoginComponent extends React.Component {
     constructor(props) {
@@ -32,12 +23,12 @@ class LoginComponent extends React.Component {
 
     render() {
         return (
-        <div className="flex login column">
-            <div className ="flex-3 title column">
+        <div className="flex-v f1 login">
+            <div className ="flex-v f3">
                 <div className="center">COIN<br/>FESTA</div>
             </div>
-            <div className ="flex action">
-            <LoginButton className="center" onClick={this.tryLogin}>LOGIN</LoginButton>
+            <div className ="flex f1">
+                <div className="button login-btn center" onClick={this.tryLogin}>LOGIN</div>
             </div>
         </div>);
     }
