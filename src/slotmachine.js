@@ -106,6 +106,10 @@ const SpinStatus = styled.div`
 
     border: 2px #ddd solid;
     border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `
 
 const SpinNumber = styled.div`
@@ -183,11 +187,17 @@ class Slot extends React.Component {
             reels: [{ top: 0, left: 10 }, { top: 0, left: 158, }, { top: 0, left: 304, }],
             spinning: false,
             resultText: null,
+            statusText: null,
         }
+    }
+
+    componentDidMount() {
+        this.statusTimer = setInterval(this.updateStatus.bind(this), 1000);
     }
     
     componentWillUnmount() {
         clearInterval(this.timer);
+        clearInterval(this.statusTimer);
     }
 
     setReward(reward) {
@@ -303,20 +313,33 @@ class Slot extends React.Component {
         this.setState({ spinning: false });
     }
 
-    getSpinStatus() {
+    updateStatus() {
         const { player } = this.props;
-        player.spin = 2000;
+        let statusText = null;
         if (player.spin < player.spinMax) {
-            
+            const remained = player.nextSpin - Date.now();
+            console.log(remained);
+            if (remained <= 0) {
+                // 서버에 요청을 해야할 것 같다.
+            } else {
+                let min = Math.floor(remained/60000);
+                let sec = Math.floor(remained/1000) % 60;
+
+                if (min < 10) { min = "0" + min };
+                if (sec < 10) { sec = "0" + sec };
+
+                statusText = `5 spins in ${min}:${sec}`;
+            }
+
         }  else if (player.spin > player.spinMax) {
-            return `+${player.spin - player.spinMax} spins`
-        } else {
-            return null;
-        }
+            statusText = `+${player.spin - player.spinMax} spins`;
+        } 
+
+        this.setState({ statusText });
     }
 
     render() {
-        const { reels, spinning, resultText } = this.state;
+        const { reels, spinning, resultText, statusText } = this.state;
         const { player } = this.props;
         
         return (
@@ -333,7 +356,7 @@ class Slot extends React.Component {
                 <SpinCounterBar ratio={player.spin/player.spinMax} />
                 <SpinNumber>{ `${player.spin}/${player.spinMax}`}</SpinNumber>
             </SpinCounter>
-            <SpinStatus>{ this.getSpinStatus() } </SpinStatus>
+            <SpinStatus>{ statusText } </SpinStatus>
             <SpinButton disabled={spinning} onClick={this.spin.bind(this)}>SPIN</SpinButton>
         </SlotBase>);
     }

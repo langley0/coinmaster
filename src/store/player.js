@@ -9,6 +9,7 @@ class Player {
     spinMax = 50;
     stage = 1;
     justCreated = false;
+    nextSpin = 0;
 
     // 업데이트를 딜레이 시켜서 원하는 시점에 업데이트를 한다
     pendingUpdates = [];
@@ -59,5 +60,7 @@ decorate(Player, {
     star: observable,
     spin: observable,
 });
+
+
 
 export default Player;
