@@ -1,6 +1,6 @@
 import React from "react";
 import styled, { keyframes } from "styled-components";
-import Modal from "./components/modal"
+import Modal from "../components/modal"
 import Button from "./button";
 
 const finishSlide = keyframes`

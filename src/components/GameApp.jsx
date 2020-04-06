@@ -1,21 +1,25 @@
 import React from "react";
-import { Provider } from "mobx-react";
+import { observer } from "mobx-react";
 
-import PlayerStore from "../stores/PlayerStore";
 import GameStore from "../stores/GameStore";
+import AuthActions from "../actions/AuthActions";
 
+import GameMain from "./GameMain";
 import Login from "./Login";
+import Spinner from "./Spinner";
 
-export default class GameApp extends React.Component {
+class GameApp extends React.Component {
+    componentDidMount() {
+        AuthActions.initialize();
+    }
+
     render() {
-        const playerState = PlayerStore.getState();
         const gameState = GameStore.getState();
-
-        return  <Provider player={ playerState } game={ gameState }>
-                    <div className="flex center full game-app"> {
-                        gameState.auth ? <div/> : <Login/>
-                    }
-                    </div>
-                </Provider>
+        return  <div className="flex center full game-app"> 
+                    { gameState.authenticated ? <GameMain/> : <Login/> }
+                    <Spinner />
+                </div>
     }
 }
+
+export default observer(GameApp);

@@ -22,6 +22,24 @@ html, body {
     flex-direction: column;
 }
 
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-v-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.flex-between {
+    display: flex;
+    justify-content: space-between;
+}
+
 .f1 {
     flex: 1;
 }
@@ -38,6 +56,15 @@ html, body {
     margin: auto;
 }
 
+.vertical-center {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.text-center {
+    text-align: center;
+}
+
 .game-app {
     position: absolute;
     top: 0;
@@ -46,34 +73,44 @@ html, body {
     bottom: 0;
 
     max-width: 375px;
-    max-height: 812px;
+    min-height: 640px;
+    max-height: 840px;
     
     background-color: #272823;
     color: #eee;
 
     display: flex;
+    overflow: hidden;
 }
 
-.button {
+button {
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: inherit;
+    color: inherit;
 
     border-radius: 10px;
     border: 2px #ddd solid;
     overflow: hidden;
     cursor: pointer;
+
+    outline:0;
 }
 
-.button:hover {
+button:hover:enabled {
     background: #ddd;
     color: #555;
 }
 
-.button:active:not(:disabled){
-    transform: scale(0.9);
+button:disabled {
+    border: 2px #888 solid;
+    color: #888
 }
 
+button:active {
+    transform: scale(0.9);
+}
 
 .login {
     text-align: center;
@@ -84,4 +121,300 @@ html, body {
     width: 80%;
     height : 48px;
     font-size: 20px;
+}
+
+.spinner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    background-color: #0008;
+    z-index: 999;
+}
+
+.spinner .dot1, .dot2, .dot3 {
+    display: inline-block;
+    background-color: #ddd;
+    width: 15px;
+    height: 15px;
+    margin: 2px;
+    border-radius: 100%;
+}
+
+.spinner .dot1 {
+     animation: spinner-beat  0.9S 0s infinite linear;
+    animation-fill-mode: both;
+}
+
+.spinner .dot2 {
+    animation: spinner-beat  0.9S 0.3s infinite linear;
+   animation-fill-mode: both;
+}
+
+.spinner .dot3 {
+    animation: spinner-beat  0.9S 0.6s infinite linear;
+    animation-fill-mode: both;
+}
+
+@keyframes spinner-beat{
+    50% {transform: scale(0.75);opacity: 0.50}
+    75% {transform: scale(1);opacity: 1}
+}
+
+.uibase {
+    position: absolute;
+    width: 200%;
+    height: 100%;
+    transition: left 0.5s ease-in-out;
+}
+
+.menuon {
+    left: -70%;
+}
+
+.menuoff {
+    left: 0;
+}
+
+.uibase #menu {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    right: 0;
+    bottom: 0;
+    border-left: 2px #ddd solid;
+}
+
+.uibase #menu #menubutton {
+    position: absolute;
+    width: 48px;
+    height: 48px;
+    top :10px;
+    left: -58px;
+}
+
+.uibase #menu #title {
+    position: absolute;
+    width: 120px;
+    font-size: 32px;
+    top: 20px;
+    left: 60px;
+    text-align: center;
+    border: 2px #ddd solid;
+    border-radius: 4px;
+}
+
+.uibase #menu #itemcontainer {
+    margin-top: 80px;
+    margin-left: 40px;
+}
+
+.uibase #menu .item {
+    padding-top: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px #ddd solid;
+}
+
+.uibase #header {
+    position: absolute;
+    width: 50%;
+    height: 70px;
+    left: 0;
+    top: 0;
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+}
+
+.uibase #gold {
+    width : 140px;
+    height: 32px;
+    max-width: 40%;
+    margin: 0 0 0 16px;
+    
+    padding-right: 8px;
+    border: 1px #ddd solid;
+    border-radius: 4px;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.uibase #star {
+    margin-left: 4px;
+    margin-top: -16px;
+    display: flex;
+    align-items: center;
+}
+
+.uibase #star #starsign {
+    display: inline-block;
+    font-size: 36px;
+}
+
+.uibase #star #counter {
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 32px;
+    margin-left: -10%;
+}
+
+.uibase #shield {
+    font-size: 32px;
+    display: flex;
+}
+
+.uibase #shield .empty {
+    width: 32px;
+    height: 32px;
+    border: 2px #ddd dashed;
+    border-radius: 50%;
+    background-color: #222;
+}
+
+.uibase #shield .overlap {
+    margin-left: -20%;
+}
+
+
+#home {
+    position: relative;
+    width: 50%;
+    height: 400%;
+    transition: top 1s ease-in-out;
+}
+
+.town {
+    top: -300%;
+}
+
+.slotmachine {
+    top: 0;
+}
+
+#town {
+    position: absolute;
+    width: 100%;
+    height: 25%;
+    top: 75%;
+}
+
+#town #playername {
+    border: 1px #ddd solid;
+    width: 60%;
+    height: 32px;
+    margin-top: 80px;
+    margin-bottom: 0;
+}
+
+#town #to-slot {
+    width: 60%;
+    margin-top: 8px;
+    margin-bottom: 0;
+}
+
+#town #buildings {
+    width: 80%;
+    margin-top: 16px;
+}
+
+#town .building {
+    width: 100%;
+    height: 20%;
+    margin: 8px;
+
+    border: 1px #ddd solid;
+}
+
+#town .upgrade {
+    width: 70%;
+}
+
+#slotmode {
+    position: absolute;
+    width: 100%;
+    height: 25%;
+    left: 0;
+    top: 0;
+}
+
+#slotmode #go-town{
+    width: 60%;
+    margin-top: 0;
+}
+
+#slotmode #base{
+    width: 80%;
+    margin-bottom: 20px;
+}
+
+#slotmode #result-text {
+    border: 1px #ddd solid;
+    border-radius: 4px;
+    width: 100%;
+    height: 45px;
+}
+
+#slotmode #machine {
+    width: 100%;
+    height: 180px;
+    border: 1px #ddd solid;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+#slotmode #reel {
+    position: relative;
+    width:30%;
+    margin: 0;
+    height: 2160px;
+}
+
+#slotmode #reel #symbol{
+    font-size: 48px;
+    height: 90px;
+}
+
+#slotmode #counter {
+    position: relative;
+    margin-top: 10px;
+    width: 80%;
+    height: 30px;
+
+    border: 1px #ddd solid;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+#slotmode #counter #bar{
+    position: absolute;
+    left: 0;
+    height: 100%;
+    background-color: #777;
+}
+
+#slotmode #counter #number{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+#slotmode #status {
+    width: 50%;
+    height: 20px;
+    margin: -1px auto;
+
+    border: 1px #ddd solid;
+    border-radius: 10px;
+    text-align: center;
+}
+
+#slotmode #spin-button {
+    width: 70%;
+    height: 50px;
+    margin-top: 30px;
 }

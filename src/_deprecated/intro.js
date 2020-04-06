@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import Modal from "./components/modal";
+import Modal from "../components/modal";
 
 const IntroContainer = styled.div`
     position: absolute;

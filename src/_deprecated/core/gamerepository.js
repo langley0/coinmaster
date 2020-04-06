@@ -63,7 +63,7 @@ class GameRepository {
             save(player);
         }
 
-        await sleep(100);
+        await sleep(10);
         return player;
     }
 

@@ -1,23 +1,16 @@
 import React from "react";
-import { inject, observer } from "mobx-react";
+import AuthActions from "../actions/AuthActions";
 
-class LoginComponent extends React.Component {
+class Login extends React.Component {
     constructor(props) {
         super(props);
-        this.tryLogin = this.tryLogin.bind(this);
+        this.login = this.login.bind(this);  
     }
 
-    tryLogin() {
-        const { player, env } = this.props;
+    login() {
         const playerName = prompt("플레이어이름", "UNKOWN");
         if (playerName) {
-            env.showLoader();
-            player.load(playerName).then(() => {
-                localStorage.setItem("username", playerName);
-                
-                env.toHome();
-                env.hideLoader();
-            });
+            AuthActions.login(playerName);
         }
     }
 
@@ -28,10 +21,10 @@ class LoginComponent extends React.Component {
                 <div className="center">COIN<br/>FESTA</div>
             </div>
             <div className ="flex f1">
-                <div className="button login-btn center" onClick={this.tryLogin}>LOGIN</div>
+                <div className="button login-btn center" onClick={this.login}>LOGIN</div>
             </div>
         </div>);
     }
 }
 
-export default inject("player", "game")(observer(LoginComponent));
+export default Login;

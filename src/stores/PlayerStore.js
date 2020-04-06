@@ -1,4 +1,5 @@
 import alt from "../alt";
+import { decorate, action } from "mobx";
 import PlayerActions from "../actions/PlayerActions";
 import PlayerState from "../states/PlayerState";
 
@@ -6,7 +7,7 @@ import PlayerState from "../states/PlayerState";
 class PlayerStore {
     constructor() {
         this.bindListeners({
-            onLogin: PlayerActions.LOGIN
+            onFetchSuccessed: PlayerActions.FETCH_SUCCESSED,
         });
 
         this.exportPublicMethods({
@@ -16,14 +17,22 @@ class PlayerStore {
         this.state = new PlayerState();
     }
 
-    fetch(data) {
-        console.log("get player data");
+    onFetchSuccessed(data) {
+        this.state.name = data.name;
+        this.state.gold = data.gold;
+        this.state.spin = data.spin;
+        this.state.nextSpin = data.nextSpin;
+        this.state.stage = data.stage;
     }
 
+    
     getState() {
-        // observable 데이터를 반환한다
         return this.state;
     }
 }
+
+decorate(PlayerStore, {
+    onFetchSuccessed: action,
+});
 
 export default alt.createStore(PlayerStore, "PlayerStore");

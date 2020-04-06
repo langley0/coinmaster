@@ -12,3 +12,8 @@ export function format(number){
         return n;
     }
 };
+
+
+export function formatInt(number){
+    return format(Math.floor(number))
+};
