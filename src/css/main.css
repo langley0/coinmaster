@@ -40,6 +40,16 @@ html, body {
     justify-content: space-between;
 }
 
+.flex-around {
+    display: flex;
+    justify-content: space-around;
+}
+
+.flex-wrap {
+    display: flex;
+    flex-wrap: wrap;
+}
+
 .f1 {
     flex: 1;
 }
@@ -73,7 +83,7 @@ html, body {
     bottom: 0;
 
     max-width: 375px;
-    min-height: 640px;
+    min-height: 560px;
     max-height: 840px;
     
     background-color: #272823;
@@ -110,6 +120,26 @@ button:disabled {
 
 button:active {
     transform: scale(0.9);
+}
+
+.modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: absolute;
+    background-color: #0008;
+    width: 100%;
+    height: 100%;
+    z-index: 100;
+    top: 0;
+    left: 0;
+}
+
+.modal-title {
+    text-align: center;
+    margin: 10px auto;
+    font-weight: bold;
 }
 
 .login {
@@ -227,6 +257,7 @@ button:active {
 
     display: flex;
     align-items: center;
+    background-color: #272823;
 }
 
 .uibase #gold {
@@ -266,6 +297,7 @@ button:active {
 .uibase #shield {
     font-size: 32px;
     display: flex;
+    margin-left: 24px;
 }
 
 .uibase #shield .empty {
@@ -274,9 +306,16 @@ button:active {
     border: 2px #ddd dashed;
     border-radius: 50%;
     background-color: #222;
+    margin-left: -20%;
 }
 
-.uibase #shield .overlap {
+.uibase #shield .filled {
+    width: 32px;
+    height: 32px;
+    
+    border: 2px #ddd solid;
+    border-radius: 50%;
+    background-color: #ddd;
     margin-left: -20%;
 }
 
@@ -319,7 +358,14 @@ button:active {
 
 #town #buildings {
     width: 80%;
-    margin-top: 16px;
+}
+
+#town #build-button {
+    position: absolute;
+    left: 40px;
+    bottom: 40px;
+    width: 64px;
+    height: 64px;
 }
 
 #town .building {
@@ -417,4 +463,112 @@ button:active {
     width: 70%;
     height: 50px;
     margin-top: 30px;
+}
+
+#attackmode {
+    width: 100%;
+    background-color: inherit;
+    z-index: 10;
+}
+
+#attackmode #title{
+    height: 60px;
+    border-bottom: 2px solid #ddd;
+}
+
+#attackmode #target-container{
+    width: 80%;
+}
+
+#attackmode #target {
+    height: 50px;
+    margin: 10px;
+    border: 1px solid #ddd;
+}
+
+#attackmode #left {
+    width: 70%;
+    margin-left: 15px;
+}
+
+#attackmode #right {
+    margin: 10px;
+    width: 30%;
+    height: 60%;
+}
+
+#attackmode #summary {
+    width: 90%;
+    height : 100px;
+    background-color: #333;
+    
+    border: 2px solid #ddd;
+    border-radius: 10px;
+}
+
+#attackmode #summary #left {
+    padding: 10px;
+    width: 80%;   
+}
+
+#attackmode #summary #ok {
+    width: 80%;
+    height: 30px;
+}
+
+#raidmode {
+    width: 100%;
+    background-color: inherit;
+    z-index: 10;
+}
+
+#raidmode #title {
+    height: 60px;
+    border-bottom: 2px solid #ddd;
+    padding: 10px;
+}
+
+#raidmode #stolen {
+    margin: 10px auto;
+}
+
+#raidmode #target {
+    width: 120px;
+    height: 120px;
+    margin: 10px;
+}
+
+#raidmode #target:before {
+    content: "X";
+}
+
+#raidmode #summary {
+    width: 90%;
+    height : 100px;
+    background-color: #333;
+    
+    border: 2px solid #ddd;
+    border-radius: 10px;
+}
+
+#raidmode #summary #left{
+    padding: 10px;
+    width: 80%;   
+}
+
+#raidmode #summary #right{
+    width: 20%;   
+}
+
+#raidmode #summary #ok{
+    width: 80%;
+    height: 30px;
+}
+
+#welcome {
+    border: 2px solid #ddd;
+    border-radius: 10px;
+
+    width: 90%;
+    height: 120px;
 }

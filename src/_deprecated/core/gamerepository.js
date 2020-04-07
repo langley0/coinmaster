@@ -68,16 +68,29 @@ class GameRepository {
     }
 
     async spin() {
-        // 룰렛 
         await sleep(100);
-        // 일단 족보를 만들기전에 랜덤으로 
-        // TODO: 결과 목록을 미리 선언하여야 한다
+
+        // 룰렛 
+        const candidates = [
+            { reel: [0, 0, 0], reward: { spins: 10 } },
+            { reel: [1, 1, 1], reward: { gold: 5000 } },
+            { reel: [2, 2, 2], reward: { gold: 20000 } },
+            { reel: [3, 3, 3], reward: { attack: true } },
+            { reel: [4, 4, 4], reward: { shield: 1 } },
+            { reel: [5, 5, 5], reward: { raid: true } },
+        ];
+
+        const slotResult = candidates[Math.floor(Math.random() * candidates.length)];
+
+        // 결과를 적용한다
+        // attack 과 raid 를 자신의 attack/raid 타겟을 어딘가에 기록해놓는다
+        // attack 과 raid 는 일정시간동안 유효하며 일정시간이 지나면 파괴된다. (redis?)
         const player = load();
         this._consumeSpin(player, 1);
         player.gold += 2000;
         save(player);
 
-        return [Math.floor(Math.random() * 6), Math.floor(Math.random() * 6), Math.floor(Math.random() * 6)];
+        return slotResult;
     }
 
     async sync() {
@@ -93,6 +106,7 @@ class GameRepository {
     }
 
     async build(building) {
+        await sleep(1000);
         const player = load();
         const currentStage = STAGE[player.stage];
         const currentLevel = player.buildings[building];
@@ -112,6 +126,24 @@ class GameRepository {
         save(player);
 
         return { gold: player.gold, buildings: player.buildings,  star: player.star };
+    }
+
+    async attack() {
+        const player = load();
+        await sleep(1000);
+        const goldReward = 5000;
+        player.gold += goldReward;
+        save(player);
+        return { gained: goldReward, total: player.gold };
+    }
+
+    async raid() {
+        const player = load();
+        await sleep(1000);
+        const goldReward = 5000;
+        player.gold += goldReward;
+        save(player);
+        return { gained: goldReward, total: player.gold, finished: true };
     }
 
     async update(player) {

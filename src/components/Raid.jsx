@@ -1,105 +1,10 @@
 import React from "react";
-import styled, { keyframes } from "styled-components";
-import { inject, observer } from "mobx-react";
+import { observer } from "mobx-react";
 
-import Button from "../_deprecated/button";
-import { format }  from "../utils";
-import Modal from "./modal"
-import AnimatedNumber from "./animated-number"
-
-
-const formatInt = function (v) {
-    return format(Math.floor(v));
-}
-
-const RaidView = styled.div`
-    width: 100%;
-    height: 100%;
-`
-
-const RaidTitle = styled.div`
-    width: 100%;
-    height: 60px;
-    border-bottom: 2px solid #ddd;
-    z-index: 2;
-    padding: 10px;
-`
-
-const Stolen = styled.div`
-    position: relative;
-    display: flex;
-    align-items: center;
-    width: 50%;
-    height: 40px;
-    border: 2px solid #ddd;
-    padding-left: 10px;
-    margin: -2px auto;
-`
-
-const RaidBox  = styled.div`
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-wrap: wrap;
-
-    width: 90%;
-    margin: 40% auto;
-`
-
-const RaidButton = styled(Button)`
-    width: 120px;
-    height: 120px;
-    margin: 10px;
-    color: ${props => props.disabled ? "#777" : "white" };
-    
-    &:before {
-        content: "X";
-    }
-`
-
-const finishSlide = keyframes`
-    0% { top: 100% }
-    100% { top: 0; }
-`
-
-const FinishView = styled.div`
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    
-    width: 90%;
-    height : 100px;
-
-    background-color: #555;
-    
-    border: 2px solid #ddd;
-    border-radius: 10px;
-
-    animation: ${finishSlide} 1s 1;
-
-`;
-
-FinishView.Left = styled.div`
-    float: left;
-    width: 80%;
-    font-size: 20px;
-    padding: 10px;
-
-`;
-
-FinishView.Right = styled.div`
-    float: right;
-    width: 20%;
-    height: 40px;
-    padding: 10px;
-`;
-
-FinishView.Button = styled(Button)`
-    width: 100%;
-    height: 100%;
-`
-
+import { formatInt }  from "../utils";
+import AnimatedNumber from "./AnimatedNumber";
+import GameActinos from "../actions/GameActions";
+import PlayerActions from "../actions/PlayerActions";
 
 class Raid extends React.Component {
     constructor(props) {
@@ -112,32 +17,22 @@ class Raid extends React.Component {
             target: [false, false, false, false],
             stolen: 0,
             finished: false,
-            confirm: false,
         }
     }
 
     onClick(index) {
         return () => {
-            this.setState(prev => {
-                let { target, stolen, finished } = prev;
-                if (!finished && !target[index]) {
-                    // 처리한다
+            PlayerActions.raid((result) => {
+                this.setState(prev => {
+                    let { target, stolen } = prev;
                     target[index] = true;
-                    stolen += 10000;
-
-                    const count = target.reduce((t, v) => v ? t+1: t, 0);
-                    if (count >= 3) {
-                        finished = true;
-                        // 1초후에 모달을 띄운다
-                        setTimeout(this.finish.bind(this), 1000);
-                    }
-
+                    // 요청을 한다
+                    stolen += result.gained;
+                    const finished = result.finished;
                     return { target, stolen, finished };
-                } else {
-                    return null;
-                }
+                });
             });
-        }
+        };
     }
 
     finish() {
@@ -145,38 +40,46 @@ class Raid extends React.Component {
     }
 
     backToGame() {
-        const { env } = this.props;
-        env.toHome();
+        GameActinos.goSlot();
+    }
+
+    renderFinishModal() {
+        return (
+        <div className="modal">
+            <div id="summary" className="flex-center">
+                <div id="left">You sotle 1,1165,000 coins from David</div>
+                <div id="right" className="flex-center">
+                    <button id="ok" onClick={this.backToGame}> OK </button>
+                </div>
+            </div>
+        </div>);
     }
 
     render() {
-        const { target, stolen, confirm } = this.state;
+        const { target, stolen, finished } = this.state;
 
         return (
-        <RaidView>
-            <RaidTitle>
+        <div id="raidmode" className="flex-v">
+            <div id="title">
                 Coin Master<br/>David's Treasure<br/>1,398,000
-            </RaidTitle>
-            <Stolen>You stole:<AnimatedNumber value={stolen} duration={500} format={formatInt}/></Stolen>
-            <RaidBox>
-                <RaidButton disabled={target[0]} onClick={this.onClick(0)}/>
-                <RaidButton disabled={target[1]} onClick={this.onClick(1)}/>
-                <RaidButton disabled={target[2]} onClick={this.onClick(2)}/>
-                <RaidButton disabled={target[3]} onClick={this.onClick(3)}/>
-            </RaidBox>
-            {
-                confirm ? <Modal>
-                    <FinishView>
-                        <FinishView.Left>You sotle 1,1165,000 coins from David</FinishView.Left>
-                        <FinishView.Right>
-                            <FinishView.Button onClick={this.backToGame}> OK </FinishView.Button>
-                        </FinishView.Right>
-                    </FinishView>
-                </Modal> :
-                null
-            }
-        </RaidView>);
+            </div>
+            <div id="stolen"> 
+                {"You stole : "}
+                <AnimatedNumber value={stolen} duration={500} format={formatInt}/>
+            </div>
+            <div id="target-container" className="flex-around flex-wrap">
+                <button id="target" disabled={target[0]} onClick={this.onClick(0)}/>
+                <button id="target" disabled={target[1]} onClick={this.onClick(1)}/>
+            </div>
+            <div id="target-container" className="flex-around flex-wrap">
+                <button id="target" disabled={target[2]} onClick={this.onClick(2)}/>
+                <button id="target" disabled={target[3]} onClick={this.onClick(3)}/>
+            </div> {
+            finished
+            ? this.renderFinishModal()
+            : null }
+        </div>);
     }
 }
 
-export default inject("player", "env")(observer(Raid));
+export default observer(Raid);

@@ -1,61 +1,8 @@
 import React from "react";
-import styled from "styled-components";
-import { inject, observer } from "mobx-react";
-import Button from "../_deprecated/button";
-import AttackSummary from "../_deprecated/attacksummary";
-
-const Base = styled.div`
-    width: 100%;
-    height: 100%;
-`
-const Title = styled.div`
-    display: flex;
-    align-items: center;
-
-    width: 100%;
-    height: 40px;
-    border-bottom: 2px solid #ddd;
-    z-index: 2;
-    padding: 10px;
-    font-size: 1.2rem;
-`
-
-const TargetContainer = styled.div`
-    position: relative;
-    margin: 40% auto;
-    width: 80%;
-`
-
-const Target = styled.div`
-    display: flex;
-    align-items: center;
-
-    width: 100%;
-    height: 50px;
-    margin-bottom: 10px;
-
-    border: 2px solid #ddd;
-    border-radius: 10px;
-`
-
-Target.Left = styled.div`
-    float: left;
-    width: 70%;
-    margin-left: 15px;
-`
-
-Target.Right = styled(Button)`
-    float: right;
-    width: 22%;
-    height: 80%;
-    margin: auto;
-    border-radius: 100%;
-    font-size: 10px;
-
-    &:before {
-        content: "ATTACK";
-    }
-`
+import { observer } from "mobx-react";
+import AttackSummary from "./AttackSummary";
+import GameActions from "../actions/GameActions";
+import PlayerActions from "../actions/PlayerActions";
 
 const BUILDGINS = [
     "HOUSE",
@@ -80,29 +27,14 @@ class Attack extends React.Component {
     }
 
     backToGame() {
-        const { env } = this.props;
-        env.toHome();
-    }
-
-    finish() {
-        this.setState({ confirm: true });
+        // 다시 슬롯으로 돌아간다
+        GameActions.goSlot();
     }
 
     onAttack(index) {
         return () => {
-            this.setState(prev => {
-                let { stolen, finished } = prev;
-                if (!finished) {
-                    stolen += 10000;
-                    finished = true;
-                    
-                    // 1초후에 모달을 띄운다
-                    setTimeout(this.finish.bind(this), 1000);
-
-                    return { stolen, finished };
-                } else {
-                    return null;
-                }
+            PlayerActions.attack(() => {
+                this.setState({ confirm: true });
             });
         }
     }
@@ -120,19 +52,19 @@ class Attack extends React.Component {
     render() {
         
         return (
-        <Base>
-            <Title>Amanada's village</Title>
-            <TargetContainer>
+        <div id="attackmode" className="flex-v">
+            <div id="title" className="flex-center">Amanada's village</div>
+            <div id="target-container" className="flex-v center">
             {
-                BUILDGINS.map(building => (<Target>
-                    <Target.Left>{building}</Target.Left>
-                    <Target.Right onClick={this.onAttack(building)}></Target.Right>
-                </Target>))
+                BUILDGINS.map(building => (<div key={"attack-target-"+building} id="target" className="flex-center">
+                    <div id="left">{building}</div>
+                    <button id="right" onClick={this.onAttack(building)}>ATTACK</button>
+                </div>))
             }
-            </TargetContainer>
+            </div>
             { this.renderSummary() }
-        </Base>);
+        </div>);
     }
 }
 
-export default inject("player", "env")(observer(Attack));
+export default observer(Attack);

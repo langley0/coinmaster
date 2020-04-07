@@ -8,6 +8,8 @@ class PlayerStore {
     constructor() {
         this.bindListeners({
             onFetchSuccessed: PlayerActions.FETCH_SUCCESSED,
+            handleAttackFinished: PlayerActions.ATTACK_FINISHED,
+            handleBuildSuccessed: PlayerActions.BUILD_SUCCESSED,
         });
 
         this.exportPublicMethods({
@@ -23,6 +25,18 @@ class PlayerStore {
         this.state.spin = data.spin;
         this.state.nextSpin = data.nextSpin;
         this.state.stage = data.stage;
+        this.state.buildings = data.buildings;
+    }
+
+    handleAttackFinished(result) {
+        // total 로 맞춘다
+        this.state.gold = result.total;
+    }
+
+    handleBuildSuccessed(result) {
+        this.state.gold = result.gold;
+        this.state.buildings = result.buildings;
+        this.state.star = result.star;
     }
 
     
@@ -33,6 +47,7 @@ class PlayerStore {
 
 decorate(PlayerStore, {
     onFetchSuccessed: action,
+    handleAttackFinished: action,
 });
 
 export default alt.createStore(PlayerStore, "PlayerStore");

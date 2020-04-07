@@ -1,6 +1,7 @@
 import alt from "../alt";
 import GameState from "../states/GameState";
 import GameActions from "../actions/GameActions";
+import { action, decorate } from "mobx";
 
 
 class GameStore {
@@ -13,6 +14,7 @@ class GameStore {
             handleGoSlot: GameActions.GO_SLOT,
             handleGoAttack: GameActions.GO_ATTACK,
             handleGoRaid: GameActions.GO_RAID,
+            handleWatchIntro: GameActions.WATCH_INTRO,
         });
 
         this.exportPublicMethods({
@@ -20,7 +22,13 @@ class GameStore {
         });
 
         // default state 에 대해서 어떻게 할지 고민해보자
+        this.loadState();
+    }
+
+    loadState()  {
+        // local 에 저장된 데이터를 읽어온다
         this.state = new GameState();
+        this.state.introWatched = localStorage.getItem("intro");
     }
 
     getState() {
@@ -55,6 +63,24 @@ class GameStore {
     handleGoRaid() {
         this.state.mode = "raid";
     }
+
+    handleWatchIntro() {
+        console.log(this.state.introWatched);
+        localStorage.setItem("intro", true);
+        this.state.introWatched = true;
+    }
 }
+
+decorate(GameStore, {
+    handleLoginSuccessed: action,
+    spinnerOn : action,
+    spinnerOff : action,
+    handleGoTown: action,
+    handleGoSlot: action,
+    handleGoAttack: action,
+    handleGoRaid: action,
+    handleWatchIntro: action,
+});
+
 
 export default alt.createStore(GameStore, "GameStore");

@@ -1,8 +1,6 @@
 import React from "react";
 import { observer } from "mobx-react";
 import PlayerStore from "../stores/PlayerStore";
-
-import Intro from "../_deprecated/intro";
 import STAGE from "../_deprecated/data/stage";
 
 import TownBuilding from "./TownBuilding";
@@ -13,25 +11,57 @@ const BUILDING_NAMES = ["HOUSE", "STATUE", "FIELD", "FARM", "BOAT"];
 
 
 class VillageComponent extends React.Component {
-    constructor(props)  {
+    constructor(props) {
         super(props);
-        //this.onCloseIntro = this.onCloseIntro.bind(this);
+
+        this.state = {
+            buildingMenuShown: false
+        };
+
+        this.toggleBuildMenu = this.toggleBuildMenu.bind(this);
     }
 
-    /*onCloseIntro() {
-        // intro 를 끝내고 서버에 태깅을 한다
-        const { player } = this.props;
-        player.intro();
-    }*/
-
     build(buildingIndex) {
-        const { player } = this.props;
-        player.build(buildingIndex);
+        PlayerActions.build(buildingIndex);
+    }
+
+    toggleBuildMenu() {
+        const { buildingMenuShown} = this.state;
+        this.setState({ buildingMenuShown: !buildingMenuShown });
+    }
+
+    onClickBuild(index) {
+        return (event) => {
+            event.stopPropagation();
+            PlayerActions.build(index)
+        }
+    }
+
+    _renderBuildMenu() {
+        const player = PlayerStore.getState();
+        const currentStage = STAGE[player.stage];
+
+        return (
+        <div className="modal" 
+            onClick={this.toggleBuildMenu}>
+            <div id="buildings" className="center"> {
+                currentStage.map((prices, index) => {
+                    const level = player.buildings[index];
+                    const name = BUILDING_NAMES[index];
+                    const price = prices[level];
+                    return <TownBuilding 
+                            key={"building-" + index} 
+                            name={name} level={level} 
+                            price={price} 
+                            onClick={this.onClickBuild(index)} />
+                })}
+            </div>
+        </div>);
     }
 
     render() {
+        const { buildingMenuShown} = this.state;
         const player = PlayerStore.getState();
-        const currentStage = STAGE[player.stage];
 
         return (
         <div id="town" className="flex-v">
@@ -40,27 +70,17 @@ class VillageComponent extends React.Component {
             </div>
             <button 
                 id="to-slot" 
-                className="center flex-center" 
-                onClick={GameActions.goSlot}>▲SLOT
+                className ="center"
+                onClick={()=> GameActions.goSlot()}>▲SLOT
             </button>
-            <div id="buildings" className="center">
-                {
-                    currentStage.map((prices, index) => {
-                        const level = player.buildings[index];
-                        const name = BUILDING_NAMES[index];
-                        const price = prices[level];
-                        return <TownBuilding 
-                                key={"building-" + index} 
-                                name={name} level={level} 
-                                price={price} 
-                                onClick={() => PlayerActions.build(index)} />
-                    })
-                }
-            </div>
-            { player.justCreated 
-                ? <Intro onClose={this.onCloseIntro}/> 
-                : null
-            }
+            <button 
+                id="build-button"
+                onClick={this.toggleBuildMenu}>
+                BUILD
+            </button> 
+            { buildingMenuShown 
+            ? this._renderBuildMenu() 
+            : null }
         </div>);
     }
 }

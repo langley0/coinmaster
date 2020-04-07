@@ -9,9 +9,20 @@ class GameActions {
             "hideSpinner",
             "goTown",
             "goSlot",
-            "goAttack",
             "goRaid",
+            "watchIntro",
         );
+    }
+
+    goAttack() {
+        return (dispatch) => {
+            this.showSpinner();
+            
+            setTimeout(() => {
+                dispatch();
+                this.hideSpinner();
+            }, 1000);
+        };
     }
 }
 
