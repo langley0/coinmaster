@@ -1,30 +1,33 @@
 import React from "react";
 import AuthActions from "../actions/AuthActions";
 
-class Login extends React.Component {
-    constructor(props) {
-        super(props);
-        this.login = this.login.bind(this);  
-    }
-
-    login() {
+function Login() {
+    const onClick = function () {
         const playerName = prompt("플레이어이름", "UNKOWN");
         if (playerName) {
             AuthActions.login(playerName);
         }
     }
 
-    render() {
-        return (
-        <div className="flex-v f1 login">
-            <div className ="flex-v f3">
-                <div className="center">COIN<br/>FESTA</div>
+    return (
+        <div className="flex-v login">
+            <div className ="flex f3">
+                <div className="center text-center">
+                    COIN
+                    <br/>
+                    FESTA
+                </div>
             </div>
             <div className ="flex f1">
-                <div className="button login-btn center" onClick={this.login}>LOGIN</div>
+                <button 
+                    className="login-btn center" 
+                    onClick={onClick}
+                >
+                    LOGIN
+                </button>
             </div>
-        </div>);
-    }
+        </div>
+    );
 }
 
 export default Login;

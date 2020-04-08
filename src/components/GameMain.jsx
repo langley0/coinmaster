@@ -61,33 +61,43 @@ class GameMain extends React.Component {
                 game.mode === "town" 
                 ? <Home mode="town"/> 
                 : <Home mode="slotmachine"/> } 
-                <div id="header">
-                    <div id="gold">
+                <div className="header flex">
+                    <div className="gold v-center">
                         <AnimatedNumber value={player.gold} duration={500} format={formatInt}/>
                     </div>
-                    <div id="star">
-                        <div id="starsign">★</div>
-                        <div id="counter">{player.star}</div>
+                    <div className="star flex-center">
+                        <div className="starsign">★</div>
+                        <div className="counter">{player.star}</div>
                     </div>
-                    <div id="shield">
+                    <div className="shield center">
                         <div className={ player.shield > 0 ? "filled" : "empty" }></div>
                         <div className={ player.shield > 1 ? "filled" : "empty" }></div>
                         <div className={ player.shield > 2 ? "filled" : "empty" }></div>
                     </div>
                 </div>
-                <div id="menu">
-                    <div id="title">MENU</div>
-                    <div id="itemcontainer" className="flex-v"> {
-                        menulist.map(item => <div className="item" key={"menu-"+item}>{item}</div>) }
+                <div className="menu">
+                    <div className="title">MENU</div>
+                    <div className="itemcontainer flex-v"> {
+                        menulist.map(item => (
+                            <div 
+                                className="item" 
+                                key={"menu-"+item}
+                            >
+                            {item}
+                            </div>
+                        ))
+                    }
                     </div>
-                    <button id="menubutton" onClick={this.onClickMenu}>MENU</button>
+                    <button className="menubutton" onClick={this.onClickMenu}>MENU</button>
                 </div>
             </div> 
-            { game.mode === "attack"
-            ? <Attack />
-            :  game.mode === "raid" 
-            ? <Raid />
-            : null } 
+            { 
+                game.mode === "attack"
+                ? <Attack />
+                :  game.mode === "raid" 
+                ? <Raid />
+                : null 
+            } 
             { this._renderEventPopup() }
         </>);
     }

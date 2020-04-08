@@ -15,10 +15,12 @@ class GameApp extends React.Component {
 
     render() {
         const gameState = GameStore.getState();
-        return  <div className="flex center full game-app"> 
-                    { gameState.authenticated ? <GameMain/> : <Login/> }
-                    <Spinner />
-                </div>
+        return  (
+            <div className="game-app flex center"> 
+                { gameState.authenticated ? <GameMain/> : <Login/> }
+                <Spinner />
+            </div>
+        );
     }
 }
 

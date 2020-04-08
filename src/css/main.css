@@ -1,3 +1,9 @@
+:root {
+    --dark: #272823;
+    --light: #eee;
+    --disabled: #888;
+}
+
 html, body {
     height: 100%;
     margin: 0;
@@ -66,9 +72,14 @@ html, body {
     margin: auto;
 }
 
-.vertical-center {
+.v-center {
     margin-top: auto;
     margin-bottom: auto;
+}
+
+.h-center {
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .text-center {
@@ -86,10 +97,9 @@ html, body {
     min-height: 560px;
     max-height: 840px;
     
-    background-color: #272823;
-    color: #eee;
+    background-color: var(--dark);
+    color: var(--light);
 
-    display: flex;
     overflow: hidden;
 }
 
@@ -97,11 +107,11 @@ button {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: inherit;
-    color: inherit;
+    background-color: var(--dark);
+    color: var(--light);
 
     border-radius: 10px;
-    border: 2px #ddd solid;
+    border: 2px var(--light) solid;
     overflow: hidden;
     cursor: pointer;
 
@@ -109,13 +119,13 @@ button {
 }
 
 button:hover:enabled {
-    background: #ddd;
-    color: #555;
+    background: var(--light);
+    color: var(--dark);
 }
 
 button:disabled {
-    border: 2px #888 solid;
-    color: #888
+    border-color: var(--disabled);
+    color: var(--disabled)
 }
 
 button:active {
@@ -143,7 +153,7 @@ button:active {
 }
 
 .login {
-    text-align: center;
+    width: 100%;
     font-size:  64px;
 }
 
@@ -166,7 +176,7 @@ button:active {
 
 .spinner .dot1, .dot2, .dot3 {
     display: inline-block;
-    background-color: #ddd;
+    background-color: var(--light);
     width: 15px;
     height: 15px;
     margin: 2px;
@@ -208,16 +218,16 @@ button:active {
     left: 0;
 }
 
-.uibase #menu {
+.uibase .menu {
     position: absolute;
     top: 0;
     left: 50%;
     right: 0;
     bottom: 0;
-    border-left: 2px #ddd solid;
+    border-left: 2px var(--light) solid;
 }
 
-.uibase #menu #menubutton {
+.uibase .menu .menubutton {
     position: absolute;
     width: 48px;
     height: 48px;
@@ -225,29 +235,28 @@ button:active {
     left: -58px;
 }
 
-.uibase #menu #title {
+.uibase .menu .title {
     position: absolute;
     width: 120px;
     font-size: 32px;
     top: 20px;
     left: 60px;
     text-align: center;
-    border: 2px #ddd solid;
-    border-radius: 4px;
+    border: 2px var(--light) solid;
 }
 
-.uibase #menu #itemcontainer {
+.uibase .menu .itemcontainer {
     margin-top: 80px;
     margin-left: 40px;
 }
 
-.uibase #menu .item {
+.uibase .menu .item {
     padding-top: 12px;
     padding-bottom: 8px;
-    border-bottom: 2px #ddd solid;
+    border-bottom: 2px var(--light) solid;
 }
 
-.uibase #header {
+.uibase .header {
     position: absolute;
     width: 50%;
     height: 70px;
@@ -255,72 +264,69 @@ button:active {
     top: 0;
     overflow: hidden;
 
-    display: flex;
-    align-items: center;
-    background-color: #272823;
+    background-color: var(--dark);
 }
 
-.uibase #gold {
+.uibase .gold {
     width : 140px;
     height: 32px;
     max-width: 40%;
-    margin: 0 0 0 16px;
+    margin-left: 16px;
     
     padding-right: 8px;
-    border: 1px #ddd solid;
-    border-radius: 4px;
+    border: 1px var(--light) solid;
 
     display: flex;
     align-items: center;
     justify-content: flex-end;
 }
 
-.uibase #star {
+.uibase .star {
     margin-left: 4px;
     margin-top: -16px;
     display: flex;
     align-items: center;
 }
 
-.uibase #star #starsign {
+.uibase .star .starsign {
     display: inline-block;
     font-size: 36px;
 }
 
-.uibase #star #counter {
+.uibase .star .counter {
     display: inline-block;
     font-size: 16px;
     margin-top: 32px;
     margin-left: -10%;
 }
 
-.uibase #shield {
+.uibase .shield {
     font-size: 32px;
     display: flex;
     margin-left: 24px;
 }
 
-.uibase #shield .empty {
+.uibase .shield .empty {
     width: 32px;
     height: 32px;
-    border: 2px #ddd dashed;
+    border: 2px var(--light) dashed;
     border-radius: 50%;
-    background-color: #222;
+    background-color: var(--dark);
     margin-left: -20%;
 }
 
-.uibase #shield .filled {
+.uibase .shield .filled {
     width: 32px;
     height: 32px;
     
-    border: 2px #ddd solid;
+    border: 2px var(--light) solid;
     border-radius: 50%;
-    background-color: #ddd;
+    background-color: var(--light);
     margin-left: -20%;
 }
 
 
-#home {
+.home {
     position: relative;
     width: 50%;
     height: 400%;
@@ -343,7 +349,7 @@ button:active {
 }
 
 #town #playername {
-    border: 1px #ddd solid;
+    border: 1px var(--light) solid;
     width: 60%;
     height: 32px;
     margin-top: 80px;
@@ -373,7 +379,7 @@ button:active {
     height: 20%;
     margin: 8px;
 
-    border: 1px #ddd solid;
+    border: 1px var(--light) solid;
 }
 
 #town .upgrade {

@@ -1,10 +1,7 @@
 import React from "react";
 
-export default class AttackSummary extends React.Component {
-    render() {
-        const { text, onClick } = this.props;
-
-        return (
+export default function AttackSummary({ text, onClick }) {
+    return (
         <div className="modal">
             <div id="summary" className="flex-center">
                 <div id="left">{ text }</div>
@@ -13,6 +10,5 @@ export default class AttackSummary extends React.Component {
                 </div>
             </div>
         </div>
-        );
-    }
+    );
 }
