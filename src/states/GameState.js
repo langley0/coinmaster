@@ -5,6 +5,7 @@ class GameState {
     mode = "town";
     authenticated = false;
     introWatched = false;
+    hyperdrive = "none";
 }
 
 decorate(GameState, {
@@ -12,6 +13,7 @@ decorate(GameState, {
     authenticated: observable,
     mode: observable,
     introWatched: observable,
+    hyperdrive: observable,
 });
 
 export default GameState;

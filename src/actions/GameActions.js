@@ -8,21 +8,47 @@ class GameActions {
             "showSpinner",
             "hideSpinner",
             "goTown",
-            "goSlot",
             "goRaid",
             "watchIntro",
+            "hyperdriveOn",
+            "hyperdriveOff",
         );
     }
 
     goAttack() {
         return (dispatch) => {
-            this.showSpinner();
+            this.hyperdriveOn();
             
             setTimeout(() => {
                 dispatch();
-                this.hideSpinner();
-            }, 1000);
+                this.hyperdriveOff();
+            }, 5000);
         };
+    }
+
+    goSlot() {
+        return (dispatch) => {
+            this.hyperdriveOn();
+            setTimeout(() => {
+                dispatch();
+                this.hyperdriveOff();
+            }, 1500);
+        };
+    }
+
+    changeMode(from, to) {
+        return (dispatch) => {
+            if ((from === "town" && to=== "slot") ||
+                (from === "slot" && to=== "town")) {
+                dispatch(from, to);
+            } else {
+                this.hyperdriveOn();
+                setTimeout(() => {
+                    dispatch();
+                    this.hyperdriveOff();
+                }, 1500);
+            }
+        }
     }
 }
 

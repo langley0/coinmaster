@@ -15,6 +15,9 @@ class GameStore {
             handleGoAttack: GameActions.GO_ATTACK,
             handleGoRaid: GameActions.GO_RAID,
             handleWatchIntro: GameActions.WATCH_INTRO,
+            handleHyperdriveOn: GameActions.HYPERDRIVE_ON,
+            handleHyperdriveOff: GameActions.HYPERDRIVE_OFF,
+            handleChangeMode: GameActions.CHANGE_MODE,
         });
 
         this.exportPublicMethods({
@@ -65,9 +68,22 @@ class GameStore {
     }
 
     handleWatchIntro() {
-        console.log(this.state.introWatched);
         localStorage.setItem("intro", true);
         this.state.introWatched = true;
+    }
+
+    handleHyperdriveOn() {
+        this.state.hyperdrive = "on";
+    }
+
+    handleHyperdriveOff() {
+        this.state.hyperdrive = "off";
+    }
+
+    handleChangeMode(from, to) {
+        if (this.state.mode === from ) {
+            this.state.mode = to;
+        }
     }
 }
 
@@ -80,6 +96,8 @@ decorate(GameStore, {
     handleGoAttack: action,
     handleGoRaid: action,
     handleWatchIntro: action,
+    handleHyperdriveOn: action,
+    handleHyperdriveOff: action,
 });
 
 

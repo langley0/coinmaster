@@ -7,6 +7,7 @@ import AuthActions from "../actions/AuthActions";
 import GameMain from "./GameMain";
 import Login from "./Login";
 import Spinner from "./Spinner";
+import Hyperdrive from "./Hyperdrive";
 
 class GameApp extends React.Component {
     componentDidMount() {
@@ -19,6 +20,7 @@ class GameApp extends React.Component {
             <div className="game-app flex center"> 
                 { gameState.authenticated ? <GameMain/> : <Login/> }
                 <Spinner />
+                <Hyperdrive count={100}/>
             </div>
         );
     }

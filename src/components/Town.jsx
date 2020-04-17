@@ -6,6 +6,7 @@ import STAGE from "../_deprecated/data/stage";
 import TownBuilding from "./TownBuilding";
 import GameActions from "../actions/GameActions";
 import PlayerActions from "../actions/PlayerActions";
+import GameStore from "../stores/GameStore";
 
 const BUILDING_NAMES = ["HOUSE", "STATUE", "FIELD", "FARM", "BOAT"];
 
@@ -62,6 +63,7 @@ class VillageComponent extends React.Component {
     render() {
         const { buildingMenuShown} = this.state;
         const player = PlayerStore.getState();
+        const game = GameStore.getState();
 
         return (
         <div id="town" className="flex-v">
@@ -71,7 +73,7 @@ class VillageComponent extends React.Component {
             <button 
                 id="to-slot" 
                 className ="center"
-                onClick={()=> GameActions.goSlot()}>▲SLOT
+                onClick={()=> GameActions.changeMode(game.mode, "slot")}>▲SLOT
             </button>
             <button 
                 id="build-button"

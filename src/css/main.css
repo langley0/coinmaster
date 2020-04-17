@@ -171,7 +171,7 @@ button:active {
     bottom: 0;
 
     background-color: #0008;
-    z-index: 999;
+    z-index: 200;
 }
 
 .spinner .dot1, .dot2, .dot3 {

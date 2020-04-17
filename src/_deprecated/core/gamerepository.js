@@ -80,7 +80,7 @@ class GameRepository {
             { reel: [5, 5, 5], reward: { raid: true } },
         ];
 
-        const slotResult = candidates[Math.floor(Math.random() * candidates.length)];
+        const slotResult = candidates[3]; //candidates[Math.floor(Math.random() * candidates.length)];
 
         // 결과를 적용한다
         // attack 과 raid 를 자신의 attack/raid 타겟을 어딘가에 기록해놓는다
