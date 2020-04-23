@@ -51,6 +51,8 @@ function clone(obj) {
     return JSON.parse(JSON.stringify(obj));
 }
 
+let ___temp_demo_spin_count = 0;
+
 class GameRepository {
     
     async login(userid) {
@@ -80,7 +82,17 @@ class GameRepository {
             { reel: [5, 5, 5], reward: { raid: true } },
         ];
 
-        const slotResult = candidates[3]; //candidates[Math.floor(Math.random() * candidates.length)];
+        ___temp_demo_spin_count++;
+        let slotResult;
+        if (___temp_demo_spin_count % 4 === 0 ) {
+            slotResult = candidates[2];
+        } else {
+            slotResult = {
+                reel: [Math.floor(Math.random() *6),Math.floor(Math.random() *6), Math.floor(Math.random() *6)],
+                reward: { gold: 2000 },
+            }
+        }
+        //const slotResult = candidates[3]; //candidates[Math.floor(Math.random() * candidates.length)];
 
         // 결과를 적용한다
         // attack 과 raid 를 자신의 attack/raid 타겟을 어딘가에 기록해놓는다

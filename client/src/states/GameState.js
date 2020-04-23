@@ -2,7 +2,7 @@ import { observable, decorate } from "mobx";
 
 class GameState {
     spinner = 0;
-    mode = "town";
+    mode = "slot";
     authenticated = false;
     introWatched = false;
     hyperdrive = "none";
