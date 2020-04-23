@@ -85,7 +85,7 @@ class GameRepository {
         ___temp_demo_spin_count++;
         let slotResult;
         if (___temp_demo_spin_count % 4 === 0 ) {
-            slotResult = candidates[2];
+            slotResult = candidates[Math.floor(Math.random() * candidates.length)];
         } else {
             slotResult = {
                 reel: [Math.floor(Math.random() *6),Math.floor(Math.random() *6), Math.floor(Math.random() *6)],
